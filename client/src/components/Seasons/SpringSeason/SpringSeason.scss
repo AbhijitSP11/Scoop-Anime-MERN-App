@@ -1,0 +1,8 @@
+.container{
+    margin-top: 50px;
+    padding: 0rem 4rem;
+    .card-grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}

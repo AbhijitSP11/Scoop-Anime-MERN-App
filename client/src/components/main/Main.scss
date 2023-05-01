@@ -1,0 +1,51 @@
+.main-container{
+    align-items: center;
+    display: flex;
+    padding: 0rem 4rem;
+    gap: 2rem;
+    
+    .left{
+        width:50%;
+        img{
+            width: 100%;
+            border-radius: 20px;
+        }
+    }
+    .right{
+        width:50%;
+        .top{
+           span{
+            color: blueviolet;
+            &:hover{
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+                text-decoration: underline;
+            }
+
+           }
+           
+
+           h1{
+            font-size: 2rem;
+           }
+           p{
+            margin-top: 32px;
+            color: #bdbdbd;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+           }
+        }
+        .bottom{
+            h3{
+                font-weight: 500;
+            }
+            span{
+                color: #dddddd;
+                font-size: 0.8rem;
+            }
+        }
+    }
+}

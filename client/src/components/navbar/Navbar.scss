@@ -1,0 +1,30 @@
+header{ 
+        padding: 1rem 4rem;        
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .logo{
+            font-weight: bold;
+            font-size: 1.4rem;
+            span{
+                a{
+                    text-decoration: none;
+                    color: inherit;
+                }   
+           }
+        }
+        .dot{
+            color: #4d49bd;
+            font-size: 2rem;
+            padding-left: 4px;
+        }
+        nav{
+            display: flex;
+            gap: 1rem;
+            a{
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+    }
+   
