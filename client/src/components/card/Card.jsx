@@ -1,17 +1,23 @@
+/* eslint-disable react/prop-types */
+import { formatISO9075 } from 'date-fns'
 import './Card.scss'
 
-const Card = () => {
+const Card = ({ summary, title, createdAt, author}) => {
   return (
     <div className="container-card">
         <img className="img" src="/assets/header.jpg" alt="image" />
         <div className="text">
             <p className="genre">Fantasy</p>
-            <h3 className="title">Demon Slayer: Kimetsu no Yaiba</h3>
-            <p className="description">Demon Slayer: Kimetsu no Yaiba is a Japanese manga series written and illustrated by Koyoharu Gotouge. It was serialized in Shueisha shōnen manga magazine Weekly Shōnen Jump from February 2016 to May 2020</p>
+            <h3 className="title">{title}</h3>
+            <p className="description">{summary}</p>
         </div>
         <div className="small__text">
-            <span className="author">James Rogan</span>
-            <span className="date">July 22, 2023</span>
+            <span className="author">{author?.username}</span>
+            <span className="date">
+              {/* <time>{format(new Date(createdAt), 'MMM d, yyyy HH:mm')}</time> */}
+              <time>{formatISO9075(new Date(createdAt))}</time>
+
+            </span>
         </div>
     </div>
   )

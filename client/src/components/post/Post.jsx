@@ -2,12 +2,14 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './Post.scss'
 import { useState } from 'react'
+import { Navigate } from 'react-router-dom'
 
 const Post = () => {
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [content, SetContent] = useState('');
   const [files, setFiles] = useState('');
+  const [redirect, setRedirect] = useState(false);
 
   const formats = [
     'header',
@@ -40,9 +42,15 @@ const Post = () => {
     const response = await fetch('http://localhost:3300/post', {
       method: 'POST',
       body: data,  
-    })
-    console.log(  await response.json())
-   
+      credentials: 'include',
+    });
+    if (response.ok) {
+      setRedirect(true);
+    }
+  }
+
+  if (redirect) {
+    return <Navigate to={'/'} />
   }
 
   return (
