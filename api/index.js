@@ -12,8 +12,6 @@ const multer = require('multer')
 const fs = require('fs')
 const uploadMiddleware = multer({dest: 'uploads/'})
 
-
-
 const PORT = process.env.PORT || 3300;
 
 const salt= bcrypt.genSaltSync(10);
@@ -55,7 +53,7 @@ mongoose.connect(process.env.MONGOOSE_URL)
           res.cookie('token', token, { 
             sameSite: 'none', 
             secure: true,
-            expires: new Date(Date.now() + 3600000), // Expires in 1 hour
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 1 hour
           }).json({
             id: userDoc._id,
             username,
@@ -68,54 +66,55 @@ mongoose.connect(process.env.MONGOOSE_URL)
       }
     })
 
-// app.get('/profile', (req, res)=>{
-//   const {token} = req.cookies  //JWT Token with username and id tha we can read only if we have the secret  
-//   jwt.verify(token, secret, {}, (err, info)=>{
-//     if(err) throw err;
-//     res.json(info)
-//   })
-//   console.log(req.cookies, 'profile cookie')
-// })
+    app.get('/post', async (req, res) => {
+      res.json(await Post.find().populate('author', ['username']));
 
-app.get('/profile', (req, res) => {
-  const { token } = req.cookies;
+    })
 
-  if (!token) {
-    return res.status(401).json({ error: 'JWT token is missing.' });
-  }
-  jwt.verify(token, secret, {}, (err, info) => {
-    if (err) {
-      return res.status(401).json({ error: 'Invalid JWT token.' });
+  app.get('/profile', (req, res) => {
+    const { token } = req.cookies;
+
+    if (!token) {
+      return res.status(401).json({ error: 'JWT token is missing.' });
     }
-    res.json(info);
+    jwt.verify(token, secret, {}, (err, info) => {
+      if (err) {
+        return res.status(401).json({ error: 'Invalid JWT token.' });
+      }
+      res.json(info);
+    });
   });
-});
 
-app.post('/post', uploadMiddleware.single('file') , async (req, res)=>{
-  const {originalname, path} = req.file;
-  const parts = originalname.split('.');
-  const ext = parts[parts.length-1]
-  const newPath= path+'.'+ext;
-  fs.renameSync(path, newPath)
+  app.post('/post', uploadMiddleware.single('file') , async (req, res)=>{
+    const {originalname, path} = req.file;
+    const parts = originalname.split('.');
+    const ext = parts[parts.length -1]
+    const newPath= path+'.'+ext;
+    fs.renameSync(path, newPath)
 
-  const {title, summary, content} = req.body;
-  const postDoc = await Post.create({ title, summary, content, cover: newPath })
+    const { token } = req.cookies;
 
-  res.json(postDoc)
+    jwt.verify(token, secret, {},async (err, info) => {
+      if (err) {
+        return res.status(401).json({ error: 'Invalid JWT token.' });
+      }
+    const {title, summary, content} = req.body;
+    const postDoc = await Post.create({ title, summary, content, cover: newPath, author: info.id })
+    res.json(postDoc)
+    });
+  
+
+  })  
+
+  app.post('/logout', (req, res)=>{
+    res.cookie('token', '', { sameSite: 'none', secure: true }).json('ok')
+  })
+
+  app.get('/test', (req, res)=>{
+    res.send('hello from server')
+  })
 
 
-})  
-
-
-app.post('/logout', (req, res)=>{
-  res.cookie('token', '', { sameSite: 'none', secure: true }).json('ok')
-})
-
-
-app.get('/test', (req, res)=>{
-  res.send('hello from server')
-})
-
-app.listen(PORT, ()=>{
-    console.log(`Listening on port ${PORT}.` )
-})
+  app.listen(PORT, ()=>{
+      console.log(`Listening on port ${PORT}.` )
+  })
