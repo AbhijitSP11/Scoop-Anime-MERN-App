@@ -67,8 +67,10 @@ mongoose.connect(process.env.MONGOOSE_URL)
     })
 
     app.get('/post', async (req, res) => {
-      res.json(await Post.find().populate('author', ['username']));
-
+      res.json(await Post.find().populate('author', ['username'])
+      .sort({createdAt: -1})
+      .limit(20)
+      );
     })
 
   app.get('/profile', (req, res) => {

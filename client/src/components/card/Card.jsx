@@ -2,10 +2,10 @@
 import { formatISO9075 } from 'date-fns'
 import './Card.scss'
 
-const Card = ({ summary, title, createdAt, author}) => {
+const Card = ({ summary, title, createdAt, cover,author}) => {
   return (
     <div className="container-card">
-        <img className="img" src="/assets/header.jpg" alt="image" />
+        <img className="img" src={'	http://localhost:5173/uploads' + cover} alt="image" />
         <div className="text">
             <p className="genre">Fantasy</p>
             <h3 className="title">{title}</h3>
